@@ -21,6 +21,7 @@ if (app.args.length < 1) {
 
 app.spreadsheetId = app.args[0] || app.spreadsheetId;
 app.beautify = typeof app.beautify !== 'undefined' ? app.beautify : true;
+app.keyDelimiter = "."
 
 var saveas = app.args[1];
 

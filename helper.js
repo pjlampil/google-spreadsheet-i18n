@@ -91,7 +91,7 @@ function setPropertyTree(object, tree, value) {
 
     var prop = tree[0];
     if (!prop) return;
-
+    
     object[prop] = tree.length === 1 ? value : typeof object[prop] === 'object' ? object[prop] : {};
 
     setPropertyTree(object[prop], tree.slice(1), value);
@@ -379,9 +379,23 @@ exports.spreadsheetToJson = function(options) {
                         if (!contents.hasOwnProperty(key)) {
                             contents[key] = {};
                         }
-                        contents[key][currentIdx] = item[key];
+                        const keys = currentIdx.split(options.keyDelimiter);                        
+                        Object.assign({}, contents[key], buildTreeObject(contents[key], keys.reverse(), item[key]));
                     });
             });
             return contents;
         });
 };
+
+function buildTreeObject(contents, keys, item) {
+    const key = keys.pop()
+    if (!contents.hasOwnProperty(key)) {
+        contents[key] = {};
+    }
+    if (keys.length > 0) {
+        return Object.assign({}, contents[key], buildTreeObject(contents[key], keys, item));
+    }
+    else {
+        return contents[key] = item;
+    }
+}
