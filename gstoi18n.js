@@ -43,7 +43,11 @@ helper
                     content = 'export default ' + content + ';\r\n';
                 }
 
-                var file = saveas + '/' + value + extension;
+                if (!fs.existsSync(saveas + '/' + value)) {
+                    fs.mkdirSync(saveas + '/' + value);
+                }
+    
+                var file = saveas + '/' + value + '/' + 'translations' + extension;
                 out.info('Creating ' + file);
                 return Promise.promisify(fs.writeFile)(file, content, 'utf-8');
             });
